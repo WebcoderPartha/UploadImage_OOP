@@ -33,10 +33,7 @@
                     }else{
                         echo "<span class='color:red'>Image not Inserted</span>";
                     }
-
                 }
-
-
             }
 //        ?>
         <form action="" method="post" enctype="multipart/form-data">
@@ -51,5 +48,12 @@
                 </tr>
             </table>
         </form>
+        <?php
+            $query = "SELECT * FROM image ORDER BY id DESC LIMIT 1";
+            $showImage = $db->select($query);
+        foreach ( $showImage as $image) { ?>
+            <img src="<?php echo  $image['photo']; ?>" height="150" alt="">
+           <?php }
+        ?>
     </div>
 <?php include 'inc/footer.php';?>
