@@ -12,18 +12,30 @@
                 $file_size = $_FILES['image']['size'];
                 $file_tmp = $_FILES['image']['tmp_name'];
                 $div = explode('.', $file_name);
-                $extension = end($div);
+                $extension = strtolower(end($div));
                 $img = time().'.'.$extension;
-                $folder = "uploads/";
-                move_uploaded_file($file_tmp, $folder.$img);
-                $query = "INSERT INTO image(photo) VALUES ('$img')";
-                $insert_image = $db->create($query);
+                $upload_image = "uploads/".$img;
 
-                if ($insert_image){
-                    echo "<span class='color:green'>Inserted successfully</span>";
+                if (empty($file_name)){
+                    echo "<span style='color:red'>Please Select any Image!</span>";
+                }elseif($file_size > 1234567){
+                    echo "<span style='color:red'>Image size should be less then 1 KB!</span>";
+                }elseif(in_array($extension,$permited) === false){
+                    echo "<span style='color:red'>You can upload only".implode(',', $permited)."</span>";
                 }else{
-                    echo "<span class='color:red'>Image not Inserted</span>";
+
+                    move_uploaded_file($file_tmp, $upload_image);
+                    $query = "INSERT INTO image(photo) VALUES ('$upload_image')";
+                    $insert_image = $db->create($query);
+
+                    if ($insert_image){
+                        echo "<span class='color:green'>Inserted successfully</span>";
+                    }else{
+                        echo "<span class='color:red'>Image not Inserted</span>";
+                    }
+
                 }
+
 
             }
 //        ?>
