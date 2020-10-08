@@ -60,10 +60,9 @@ class Database{
 
         $delete = $this->link->query($query) or die($this->link->error.__LINE__);
         if ($delete){
-            header("Location: index.php?msg=".urldecode('Data deleted successfully.'));
-            exit();
+            return $delete;
         }else{
-            die("Error: (".$this->errno.")".$this->link->error);
+            return false;
         }
 
     }

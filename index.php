@@ -29,9 +29,9 @@
                     $insert_image = $db->create($query);
 
                     if ($insert_image){
-                        echo "<span class='color:green'>Inserted successfully</span>";
+                        echo "<span style='color:green'>Inserted successfully</span>";
                     }else{
-                        echo "<span class='color:red'>Image not Inserted</span>";
+                        echo "<span style='color:red'>Image not Inserted</span>";
                     }
                 }
             }
@@ -48,12 +48,45 @@
                 </tr>
             </table>
         </form>
-        <?php
-            $query = "SELECT * FROM image ORDER BY id DESC LIMIT 1";
-            $showImage = $db->select($query);
-        foreach ( $showImage as $image) { ?>
-            <img src="<?php echo  $image['photo']; ?>" height="150" alt="">
-           <?php }
-        ?>
+            <table width="100%">
+                <tr>
+                    <th>No.</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+                <?php
+                    if (isset($_GET['del'])){
+                        $id = $_GET['del'];
+                     $imageQuery = "select * from image where id = '$id' ";
+                     $getImage = $db->select($imageQuery);
+
+                     if ($getImage){
+                         while ($exist_img = $getImage->fetch_assoc()){
+                             $deleteImg = $exist_img['photo'];
+                             unlink($deleteImg);
+                         }
+                     }
+                    $query = "delete from image where id = '$id'";
+                    $deleteImage = $db->delete($query);
+                    if ($deleteImage){
+                            echo "<span style='color:green'>Image Deleted successfully</span>";
+                    }else{
+                        echo "<span style='color:red'>Image not deleted</span>";
+                        }
+                   }
+                ?>
+                <?php
+                $query = "SELECT * FROM image ORDER BY id DESC";
+                $showImage = $db->select($query);
+                if($showImage){
+                foreach ( $showImage as $image) { ?>
+                <tr>
+                    <td><?php echo $image['id']; ?></td>
+                    <td> <img src="<?php echo  $image['photo']; ?>" height="50" alt=""></td>
+                    <td><a href="?del=<?php echo $image['id']; ?>" style="background:red; padding:5px 20px; color:#fff; text-decoration:none">Delete</a></td>
+                </tr>
+                <?php } } ?>
+            </table>
+
     </div>
 <?php include 'inc/footer.php';?>
